@@ -1,0 +1,615 @@
+-- create table customers --
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Email VARCHAR(100) UNIQUE,
+    PasswordHash VARCHAR(255),
+    PhoneNumber VARCHAR(20),
+    Address VARCHAR(255),
+    City VARCHAR(50),
+    State VARCHAR(50),
+    ZipCode VARCHAR(10),
+    Country VARCHAR(50),
+    RegistrationDate DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- create products table --
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY AUTO_INCREMENT,
+    ProductName VARCHAR(100),
+    Description TEXT,
+    Price DECIMAL(10, 2),
+    StockQuantity INT,
+    CategoryID INT,
+    SupplierID INT,
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+-- create categories table --
+
+CREATE TABLE Categories (
+    CategoryID INT PRIMARY KEY AUTO_INCREMENT,
+    CategoryName VARCHAR(50),
+    Description TEXT,
+    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+-- create suppliers --
+CREATE TABLE Suppliers (
+    SupplierID INT PRIMARY KEY AUTO_INCREMENT,
+    SupplierName VARCHAR(100),
+    ContactName VARCHAR(50),
+    ContactEmail VARCHAR(100),
+    PhoneNumber VARCHAR(20),
+    Address VARCHAR(255),
+    City VARCHAR(50),
+    State VARCHAR(50),
+    ZipCode VARCHAR(10),
+    Country VARCHAR(50)
+);
+
+
+-- create orders table --
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerID INT,
+    OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ShippingAddress VARCHAR(255),
+    ShippingCity VARCHAR(50),
+    ShippingState VARCHAR(50),
+    ShippingZipCode VARCHAR(10),
+    ShippingCountry VARCHAR(50),
+    OrderStatus VARCHAR(20),
+    TotalAmount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+
+-- create orderDetails -- 
+
+CREATE TABLE OrderDetails (
+    OrderDetailID INT PRIMARY KEY AUTO_INCREMENT,
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+    UnitPrice DECIMAL(10, 2),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+
+-- create cart table --
+
+CREATE TABLE Cart (
+    CartID INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerID INT,
+    ProductID INT,
+    Quantity INT,
+    AddedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+
+
+-- create reviews table --
+
+CREATE TABLE Reviews (
+    ReviewID INT PRIMARY KEY AUTO_INCREMENT,
+    ProductID INT,
+    CustomerID INT,
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    ReviewText TEXT,
+    ReviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+
+-- create payements table --
+
+CREATE TABLE Payments (
+    PaymentID INT PRIMARY KEY AUTO_INCREMENT,
+    OrderID INT,
+    PaymentDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Amount DECIMAL(10, 2),
+    PaymentMethod VARCHAR(50),
+    PaymentStatus VARCHAR(20),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+);
+
+
+
+-- Insert values customers --
+
+INSERT INTO Customers (FirstName, LastName, Email, PasswordHash, PhoneNumber, Address, City, State, ZipCode, Country)
+VALUES
+('John', 'Doe', 'john.doe@example.com', 'hashedpassword123', '1234567890', '123 Elm St', 'Springfield', 'IL', '62701', 'USA'),
+('Jane', 'Smith', 'jane.smith@example.com', 'hashedpassword456', '0987654321', '456 Oak St', 'Chicago', 'IL', '60601', 'USA'),
+('Alice', 'Johnson', 'alice.johnson@example.com', 'hashedpassword789', '2345678901', '789 Pine St', 'New York', 'NY', '10001', 'USA'),
+('Bob', 'Williams', 'bob.williams@example.com', 'hashedpassword101', '3456789012', '101 Maple St', 'Los Angeles', 'CA', '90001', 'USA'),
+('Charlie', 'Brown', 'charlie.brown@example.com', 'hashedpassword102', '4567890123', '202 Birch St', 'Houston', 'TX', '77001', 'USA'),
+('Dave', 'Davis', 'dave.davis@example.com', 'hashedpassword103', '5678901234', '303 Cedar St', 'Phoenix', 'AZ', '85001', 'USA'),
+('Eva', 'Miller', 'eva.miller@example.com', 'hashedpassword104', '6789012345', '404 Ash St', 'Philadelphia', 'PA', '19019', 'USA'),
+('Frank', 'Garcia', 'frank.garcia@example.com', 'hashedpassword105', '7890123456', '505 Willow St', 'San Antonio', 'TX', '78201', 'USA'),
+('Grace', 'Martinez', 'grace.martinez@example.com', 'hashedpassword106', '8901234567', '606 Elm St', 'San Diego', 'CA', '92101', 'USA'),
+('Hannah', 'Rodriguez', 'hannah.rodriguez@example.com', 'hashedpassword107', '9012345678', '707 Pine St', 'Dallas', 'TX', '75201', 'USA'),
+('Isaac', 'Martinez', 'isaac.martinez@example.com', 'hashedpassword108', '0123456789', '808 Maple St', 'San Jose', 'CA', '95101', 'USA'),
+('Jack', 'Lee', 'jack.lee@example.com', 'hashedpassword109', '1234567891', '909 Birch St', 'Austin', 'TX', '73301', 'USA'),
+('Kara', 'Walker', 'kara.walker@example.com', 'hashedpassword110', '2345678910', '101 Cedar St', 'Jacksonville', 'FL', '32099', 'USA'),
+('Leo', 'Harris', 'leo.harris@example.com', 'hashedpassword111', '3456789101', '202 Oak St', 'San Francisco', 'CA', '94101', 'USA'),
+('Mia', 'Clark', 'mia.clark@example.com', 'hashedpassword112', '4567891012', '303 Willow St', 'Columbus', 'OH', '43004', 'USA'),
+('Nathan', 'Lewis', 'nathan.lewis@example.com', 'hashedpassword113', '5678910123', '404 Elm St', 'Charlotte', 'NC', '28201', 'USA'),
+('Olivia', 'Young', 'olivia.young@example.com', 'hashedpassword114', '6789101234', '505 Pine St', 'Indianapolis', 'IN', '46201', 'USA'),
+('Peter', 'King', 'peter.king@example.com', 'hashedpassword115', '7891012345', '606 Oak St', 'Seattle', 'WA', '98101', 'USA'),
+('Quincy', 'Wright', 'quincy.wright@example.com', 'hashedpassword116', '8901012346', '707 Cedar St', 'Denver', 'CO', '80201', 'USA'),
+('Rachel', 'Scott', 'rachel.scott@example.com', 'hashedpassword117', '9010123456', '808 Birch St', 'Washington', 'DC', '20001', 'USA'),
+('Sam', 'Adams', 'sam.adams@example.com', 'hashedpassword118', '0123456788', '909 Willow St', 'Boston', 'MA', '02101', 'USA'),
+('Tina', 'Baker', 'tina.baker@example.com', 'hashedpassword119', '1234567899', '101 Elm St', 'El Paso', 'TX', '79901', 'USA'),
+('Uma', 'Gonzalez', 'uma.gonzalez@example.com', 'hashedpassword120', '2345678900', '202 Maple St', 'Nashville', 'TN', '37201', 'USA'),
+('Victor', 'Nelson', 'victor.nelson@example.com', 'hashedpassword121', '3456789001', '303 Oak St', 'Memphis', 'TN', '37501', 'USA'),
+('Wendy', 'Mitchell', 'wendy.mitchell@example.com', 'hashedpassword122', '4567890002', '404 Pine St', 'Portland', 'OR', '97201', 'USA'),
+('Xander', 'Perez', 'xander.perez@example.com', 'hashedpassword123', '5678900013', '505 Cedar St', 'Oklahoma City', 'OK', '73101', 'USA'),
+('Yara', 'Roberts', 'yara.roberts@example.com', 'hashedpassword124', '6789000024', '606 Birch St', 'Las Vegas', 'NV', '89101', 'USA'),
+('Zane', 'Turner', 'zane.turner@example.com', 'hashedpassword125', '7890000035', '707 Willow St', 'Louisville', 'KY', '40201', 'USA'),
+('Alex', 'Lopez', 'alex.lopez@example.com', 'hashedpassword126', '8900000046', '808 Elm St', 'Baltimore', 'MD', '21201', 'USA'),
+('Bella', 'Hill', 'bella.hill@example.com', 'hashedpassword127', '9010000057', '909 Pine St', 'Milwaukee', 'WI', '53201', 'USA');
+
+
+Select * from Customers()
+
+
+-- Insert products table --
+
+INSERT INTO Products (ProductName, Description, Price, StockQuantity, CategoryID, SupplierID)
+VALUES
+('Laptop', 'High performance laptop', 999.99, 50, 1, 1),
+('Smartphone', 'Latest model smartphone', 699.99, 150, 2, 2),
+('Headphones', 'Noise-cancelling headphones', 199.99, 100, 3, 3),
+('Tablet', '10-inch tablet', 399.99, 80, 5, 5),
+('Monitor', '27-inch 4K monitor', 499.99, 60, 6, 6),
+('Keyboard', 'Mechanical gaming keyboard', 129.99, 120, 7, 7),
+('Mouse', 'Wireless ergonomic mouse', 79.99, 200, 8, 8),
+('Printer', 'Color laser printer', 299.99, 30, 9, 9),
+('Scanner', 'Flatbed document scanner', 199.99, 40, 10, 10),
+('External SSD', '1TB portable SSD', 179.99, 90, 11, 11),
+('VR Headset', 'Virtual reality headset', 299.99, 70, 12, 12),
+('Camera', 'Mirrorless camera', 899.99, 25, 13, 13),
+('Tripod', 'Adjustable camera tripod', 69.99, 80, 14, 14),
+('Fitness Tracker', 'Heart rate monitor fitness tracker', 149.99, 100, 15, 15),
+('Router', 'Dual-band WiFi router', 129.99, 120, 16, 16),
+('Smart Speaker', 'Voice-controlled smart speaker', 149.99, 110, 17, 17),
+('Gaming Console', 'Next-gen gaming console', 499.99, 50, 18, 18),
+('Microphone', 'Studio-quality microphone', 199.99, 70, 19, 19),
+('USB-C Hub', 'Multiport USB-C hub', 49.99, 150, 20, 20),
+('Power Bank', '20000mAh power bank', 39.99, 200, 21, 21),
+('Projector', 'HD home projector', 599.99, 30, 22, 22),
+('Office Chair', 'Ergonomic office chair', 249.99, 40, 23, 23),
+('Standing Desk', 'Adjustable standing desk', 499.99, 20, 24, 24),
+('External Hard Drive', '2TB external hard drive', 129.99, 60, 25, 25),
+('GPS Watch', 'GPS-enabled sports watch', 179.99, 85, 26, 26),
+('Bluetooth Earbuds', 'Wireless Bluetooth earbuds', 99.99, 130, 27, 27),
+('Graphic Tablet', 'Digital graphic drawing tablet', 299.99, 45, 28, 28),
+('Security Camera', 'Indoor/outdoor security camera', 149.99, 55, 29, 29),
+('Smartwatch', 'Water-resistant smartwatch', 299.99, 75, 4, 4);
+
+
+Select * from Products()
+
+-- insert categories table --
+
+INSERT INTO Categories (CategoryName, Description)
+VALUES
+('Electronics', 'Electronic gadgets and devices'),
+('Mobile Phones', 'Smartphones and accessories'),
+('Audio', 'Headphones and audio devices'),
+('Computers', 'Laptops, desktops, and accessories'),
+('Tablets', 'Tablets and touchscreen devices'),
+('Monitors', 'Computer monitors and displays'),
+('Keyboards', 'Computer keyboards and typing accessories'),
+('Mice', 'Computer mice and pointing devices'),
+('Printers', 'Printers and printing accessories'),
+('Scanners', 'Scanners and scanning devices'),
+('Storage', 'Storage devices and external drives'),
+('VR & AR', 'Virtual reality and augmented reality devices'),
+('Cameras', 'Digital cameras and photography equipment'),
+('Photography Accessories', 'Accessories for cameras and photography'),
+('Fitness Trackers', 'Fitness trackers and health monitoring devices'),
+('Networking', 'Networking devices and equipment'),
+('Smart Home', 'Devices for smart home automation'),
+('Gaming', 'Gaming consoles and accessories'),
+('Microphones', 'Microphones and audio recording equipment'),
+('USB Accessories', 'USB hubs, cables, and accessories'),
+('Power Banks', 'Portable power banks and chargers'),
+('Projectors', 'Projectors and projection equipment'),
+('Office Furniture', 'Office chairs, desks, and furniture'),
+('External Drives', 'External hard drives and storage solutions'),
+('GPS Devices', 'GPS navigation devices and trackers'),
+('Bluetooth Accessories', 'Bluetooth headphones and speakers'),
+('Drawing Tablets', 'Graphic drawing tablets and styluses'),
+('Security Cameras', 'Security cameras and surveillance equipment'),
+('Wearables', 'Smartwatches and wearable technology');
+
+
+Select * from Categories
+
+
+-- Insert Suppliers table --
+
+INSERT INTO Suppliers (SupplierName, ContactName, ContactEmail, PhoneNumber, Address, City, State, ZipCode, Country)
+VALUES
+('Tech Suppliers Inc.', 'Tom Hanks', 'tom.hanks@techsuppliers.com', '1112223333', '123 Tech Ave', 'San Francisco', 'CA', '94105', 'USA'),
+('Gadget World', 'Sandra Bullock', 'sandra.bullock@gadgetworld.com', '4445556666', '456 Gadget Blvd', 'San Jose', 'CA', '95112', 'USA'),
+('Audio Emporium', 'Will Smith', 'will.smith@audioemporium.com', '7778889999', '789 Audio Ln', 'Austin', 'TX', '73301', 'USA'),
+('Computer Solutions', 'Jennifer Lopez', 'jennifer.lopez@computersolutions.com', '2223334444', '321 Computer Rd', 'New York', 'NY', '10001', 'USA'),
+('Tech Gear Hub', 'Brad Pitt', 'brad.pitt@techgearhub.com', '5556667777', '567 Gear Ave', 'Los Angeles', 'CA', '90001', 'USA'),
+('Mobile Tech Supply', 'Scarlett Johansson', 'scarlett.johansson@mobiletechsupply.com', '8889990000', '987 Mobile Blvd', 'Miami', 'FL', '33101', 'USA'),
+('AudioTech Solutions', 'Leonardo DiCaprio', 'leonardo.dicaprio@audiotechsolutions.com', '1213141516', '111 Audio Ave', 'Chicago', 'IL', '60601', 'USA'),
+('Smart Devices Co.', 'Angelina Jolie', 'angelina.jolie@smartdevicesco.com', '6667778888', '789 Smart St', 'Dallas', 'TX', '75201', 'USA'),
+('Gaming World', 'Chris Hemsworth', 'chris.hemsworth@gamingworld.com', '4546474849', '567 Game Blvd', 'Seattle', 'WA', '98101', 'USA'),
+('Camera Experts', 'Matt Damon', 'matt.damon@cameraexperts.com', '1819202122', '123 Camera Ln', 'San Diego', 'CA', '92101', 'USA'),
+('Tech Innovations', 'Natalie Portman', 'natalie.portman@techinnovations.com', '2829303132', '456 Innovation Rd', 'Houston', 'TX', '77001', 'USA'),
+('SmartHome Tech', 'Robert Downey Jr.', 'robert.downey@smarthometech.com', '9192939495', '789 SmartHome Ave', 'Phoenix', 'AZ', '85001', 'USA'),
+('Wireless Gadgets', 'Charlize Theron', 'charlize.theron@wirelessgadgets.com', '3637383940', '567 Wireless Blvd', 'Philadelphia', 'PA', '19101', 'USA'),
+('Fitness Tech Store', 'Mark Wahlberg', 'mark.wahlberg@fitnesstechstore.com', '4647484950', '123 Fitness Ave', 'Denver', 'CO', '80201', 'USA'),
+('Office Equipment Co.', 'Anne Hathaway', 'anne.hathaway@officeequipmentco.com', '5152535455', '456 Office Ln', 'Atlanta', 'GA', '30301', 'USA'),
+('Health Tech Supply', 'Ryan Reynolds', 'ryan.reynolds@healthtechsupply.com', '5657585960', '789 Health St', 'Orlando', 'FL', '32801', 'USA'),
+('Virtual Reality Gear', 'Emma Stone', 'emma.stone@virtualrealitygear.com', '6162636465', '101 VR Blvd', 'Las Vegas', 'NV', '89101', 'USA'),
+('Home Automation Co.', 'Chris Evans', 'chris.evans@homeautomationco.com', '6768697071', '123 Home Ave', 'Portland', 'OR', '97201', 'USA'),
+('Outdoor Gadgets', 'Jennifer Lawrence', 'jennifer.lawrence@outdoorgadgets.com', '7273747576', '456 Outdoor Ln', 'Charlotte', 'NC', '28201', 'USA'),
+('Tech Essentials', 'Tom Cruise', 'tom.cruise@techessentials.com', '7778798081', '789 Tech Blvd', 'San Antonio', 'TX', '78201', 'USA'),
+('Smart Clothing Co.', 'Dwayne Johnson', 'dwayne.johnson@smartclothingco.com', '8283848586', '101 Smart St', 'San Jose', 'CA', '95101', 'USA'),
+('Navigation Devices', 'Halle Berry', 'halle.berry@navigationdevices.com', '8990919293', '123 Navigation Ave', 'Austin', 'TX', '73301', 'USA'),
+('Fashion Tech', 'Jennifer Aniston', 'jennifer.aniston@fashiontech.com', '9495969798', '456 Fashion Blvd', 'Seattle', 'WA', '98101', 'USA'),
+('Tech Solutions Inc.', 'Kevin Hart', 'kevin.hart@techsolutionsinc.com', '1011021031', '789 Tech Ave', 'Dallas', 'TX', '75201', 'USA'),
+('Digital Accessories', 'Emma Watson', 'emma.watson@digitalaccessories.com', '1041051061', '123 Digital St', 'Chicago', 'IL', '60601', 'USA'),
+('Computer Tech Co.', 'Julia Roberts', 'julia.roberts@computertechco.com', '1071081091', '456 Computer Ln', 'Los Angeles', 'CA', '90001', 'USA'),
+('E-commerce Electronics', 'Keanu Reeves', 'keanu.reeves@ecommerceelectronics.com', '1101111121', '789 E-commerce Blvd', 'Miami', 'FL', '33101', 'USA'),
+('Technology Supplies', 'Nicole Kidman', 'nicole.kidman@technologysupplies.com', '1131141151', '101 Tech St', 'New York', 'NY', '10001', 'USA'),
+('Wearable Wonders', 'Emma Watson', 'emma.watson@wearablewonders.com', '1011121314', '101 Wearable St', 'Seattle', 'WA', '98101', 'USA');
+
+
+
+Select * from Suppliers()
+
+
+-- Insert orders table --
+
+INSERT INTO Orders (CustomerID, ShippingAddress, ShippingCity, ShippingState, ShippingZipCode, ShippingCountry, OrderStatus, TotalAmount)
+VALUES
+(1, '123 Elm St', 'Springfield', 'IL', '62701', 'USA', 'Processing', 1199.98),
+(2, '456 Oak St', 'Chicago', 'IL', '60601', 'USA', 'Shipped', 899.99),
+(3, '789 Pine St', 'New York', 'NY', '10001', 'USA', 'Delivered', 199.99),
+(4, '101 Maple St', 'Los Angeles', 'CA', '90001', 'USA', 'Pending', 299.99),
+(5, '567 Cedar St', 'Houston', 'TX', '77001', 'USA', 'Processing', 599.99),
+(6, '890 Walnut St', 'San Francisco', 'CA', '94101', 'USA', 'Shipped', 499.99),
+(7, '234 Birch St', 'Miami', 'FL', '33101', 'USA', 'Delivered', 149.99),
+(8, '901 Pineapple St', 'Orlando', 'FL', '32801', 'USA', 'Pending', 399.99),
+(9, '345 Cherry St', 'Seattle', 'WA', '98101', 'USA', 'Processing', 799.99),
+(10, '678 Mango St', 'Dallas', 'TX', '75201', 'USA', 'Shipped', 299.99),
+(11, '123 Apple St', 'Phoenix', 'AZ', '85001', 'USA', 'Delivered', 129.99),
+(12, '456 Banana St', 'Austin', 'TX', '73301', 'USA', 'Pending', 229.99),
+(13, '789 Orange St', 'Denver', 'CO', '80201', 'USA', 'Processing', 999.99),
+(14, '234 Lemon St', 'Portland', 'OR', '97201', 'USA', 'Shipped', 399.99),
+(15, '567 Grape St', 'San Diego', 'CA', '92101', 'USA', 'Delivered', 179.99),
+(16, '890 Watermelon St', 'Las Vegas', 'NV', '89101', 'USA', 'Pending', 349.99),
+(17, '901 Kiwi St', 'Charlotte', 'NC', '28201', 'USA', 'Processing', 699.99),
+(18, '345 Pine St', 'Atlanta', 'GA', '30301', 'USA', 'Shipped', 259.99),
+(19, '678 Olive St', 'Philadelphia', 'PA', '19101', 'USA', 'Delivered', 89.99),
+(20, '123 Peach St', 'San Antonio', 'TX', '78201', 'USA', 'Pending', 179.99),
+(21, '456 Plum St', 'New Orleans', 'LA', '70112', 'USA', 'Processing', 449.99),
+(22, '789 Mango St', 'Washington', 'DC', '20001', 'USA', 'Shipped', 349.99),
+(23, '234 Papaya St', 'Boston', 'MA', '02101', 'USA', 'Delivered', 299.99),
+(24, '567 Guava St', 'Salt Lake City', 'UT', '84101', 'USA', 'Pending', 399.99),
+(25, '890 Pomegranate St', 'Minneapolis', 'MN', '55401', 'USA', 'Processing', 199.99),
+(26, '901 Coconut St', 'Detroit', 'MI', '48201', 'USA', 'Shipped', 499.99),
+(27, '345 Avocado St', 'Kansas City', 'MO', '64101', 'USA', 'Delivered', 329.99),
+(28, '678 Lychee St', 'Honolulu', 'HI', '96801', 'USA', 'Pending', 269.99),
+(29, '123 Dragonfruit St', 'Anchorage', 'AK', '99501', 'USA', 'Processing', 599.99),
+(30, '456 Kiwano St', 'Boise', 'ID', '83701', 'USA', 'Shipped', 179.99);
+
+
+
+Select * from Orders()
+
+
+-- Insert orderdetails --
+
+INSERT INTO OrderDetails (OrderID, ProductID, Quantity, UnitPrice)
+VALUES
+(1, 1, 1, 999.99),
+(1, 3, 1, 199.99),
+(2, 2, 1, 699.99),
+(2, 4, 1, 399.99),
+(3, 3, 1, 199.99),
+(4, 5, 1, 599.99),
+(4, 7, 1, 149.99),
+(5, 6, 1, 499.99),
+(5, 8, 1, 399.99),
+(6, 10, 1, 299.99),
+(6, 12, 1, 229.99),
+(7, 9, 1, 799.99),
+(7, 11, 1, 129.99),
+(8, 13, 1, 999.99),
+(8, 15, 1, 179.99),
+(9, 14, 1, 399.99),
+(9, 16, 1, 349.99),
+(10, 17, 1, 699.99),
+(10, 19, 1, 89.99),
+(11, 18, 1, 259.99),
+(11, 20, 1, 179.99),
+(12, 21, 1, 449.99),
+(12, 23, 1, 299.99),
+(13, 22, 1, 349.99),
+(13, 24, 1, 399.99),
+(14, 25, 1, 199.99),
+(14, 26, 1, 499.99),
+(15, 27, 1, 329.99),
+(15, 29, 1, 599.99),
+(16, 28, 1, 269.99),
+(16, 30, 1, 179.99);
+
+
+
+Select * from OrderDetails
+
+
+-- insert cart table --
+
+INSERT INTO Cart (CustomerID, ProductID, Quantity)
+VALUES
+(1, 1, 1),
+(1, 3, 1),
+(2, 2, 1),
+(2, 4, 1),
+(3, 3, 1),
+(4, 5, 1),
+(4, 7, 1),
+(5, 6, 1),
+(5, 8, 1),
+(6, 10, 1),
+(6, 12, 1),
+(7, 9, 1),
+(7, 11, 1),
+(8, 13, 1),
+(8, 15, 1),
+(9, 14, 1),
+(9, 16, 1),
+(10, 17, 1),
+(10, 19, 1),
+(11, 18, 1),
+(11, 20, 1),
+(12, 21, 1),
+(12, 23, 1),
+(13, 22, 1),
+(13, 24, 1),
+(14, 25, 1),
+(14, 26, 1),
+(15, 27, 1),
+(15, 29, 1),
+(16, 28, 1),
+(16, 30, 1);
+
+
+
+Select * from Cart()
+
+
+-- insert reviews --
+
+INSERT INTO Reviews (ProductID, CustomerID, Rating, ReviewText)
+VALUES
+(1, 1, 5, 'Excellent product!'),
+(2, 2, 4, 'Very good but a bit expensive.'),
+(3, 3, 3, 'Average quality.'),
+(4, 4, 4, 'Nice smartwatch with great features.'),
+(5, 5, 5, 'Absolutely love it! Best purchase ever.'),
+(6, 6, 2, 'Disappointed with the performance.'),
+(7, 7, 4, 'Great value for money.'),
+(8, 8, 3, 'Decent quality, could be better.'),
+(9, 9, 5, 'Amazing service and product.'),
+(10, 10, 1, 'Terrible experience, product broke in a week.'),
+(11, 11, 4, 'Good for gaming, but quite bulky.'),
+(12, 12, 5, 'Highly recommend! Works perfectly.'),
+(13, 13, 3, 'Average performance, nothing exceptional.'),
+(14, 14, 4, 'Solid build quality.'),
+(15, 15, 2, 'Not worth the price.'),
+(16, 16, 5, 'Best purchase I made this year!'),
+(17, 17, 4, 'Works great, easy setup.'),
+(18, 18, 3, 'Could be more durable.'),
+(19, 19, 5, 'Excellent customer service.'),
+(20, 20, 4, 'Good value for money.'),
+(21, 21, 2, 'Not as expected, quite disappointing.'),
+(22, 22, 4, 'Impressive features, worth the price.'),
+(23, 23, 5, 'Perfect for my needs.'),
+(24, 24, 3, 'Average performance, could use improvements.'),
+(25, 25, 4, 'Reliable product.'),
+(26, 26, 5, 'Very satisfied with the purchase.'),
+(27, 27, 1, 'Poor quality, stopped working after a few days.'),
+(28, 28, 4, 'Nice design and functionality.'),
+(29, 29, 3, 'Decent product, nothing extraordinary.'),
+(30, 30, 5, 'Couldn\'t be happier with this product!');
+
+
+Select * from Reviews()
+
+
+-- insert payements table --
+
+INSERT INTO Payments (OrderID, PaymentDate, Amount, PaymentMethod, PaymentStatus)
+VALUES
+(1, '2024-06-01 10:00:00', 1199.98, 'Credit Card', 'Completed'),
+(2, '2024-06-02 11:00:00', 899.99, 'PayPal', 'Completed'),
+(3, '2024-06-03 12:00:00', 199.99, 'Credit Card', 'Completed'),
+(4, '2024-06-04 13:00:00', 299.99, 'Debit Card', 'Pending'),
+(5, '2024-06-05 14:00:00', 599.99, 'PayPal', 'Completed'),
+(6, '2024-06-06 15:00:00', 499.99, 'Credit Card', 'Completed'),
+(7, '2024-06-07 16:00:00', 149.99, 'Credit Card', 'Completed'),
+(8, '2024-06-08 17:00:00', 399.99, 'PayPal', 'Pending'),
+(9, '2024-06-09 18:00:00', 799.99, 'Debit Card', 'Completed'),
+(10, '2024-06-10 19:00:00', 299.99, 'Credit Card', 'Completed'),
+(11, '2024-06-11 20:00:00', 129.99, 'Credit Card', 'Completed'),
+(12, '2024-06-12 21:00:00', 229.99, 'PayPal', 'Pending'),
+(13, '2024-06-13 22:00:00', 999.99, 'Debit Card', 'Completed'),
+(14, '2024-06-14 23:00:00', 399.99, 'Credit Card', 'Completed'),
+(15, '2024-06-15 00:00:00', 179.99, 'Credit Card', 'Pending'),
+(16, '2024-06-16 01:00:00', 349.99, 'PayPal', 'Completed'),
+(17, '2024-06-17 02:00:00', 699.99, 'Debit Card', 'Completed'),
+(18, '2024-06-18 03:00:00', 259.99, 'Credit Card', 'Completed'),
+(19, '2024-06-19 04:00:00', 89.99, 'Credit Card', 'Completed'),
+(20, '2024-06-20 05:00:00', 179.99, 'PayPal', 'Pending'),
+(21, '2024-06-21 06:00:00', 449.99, 'Debit Card', 'Completed'),
+(22, '2024-06-22 07:00:00', 349.99, 'Credit Card', 'Completed'),
+(23, '2024-06-23 08:00:00', 299.99, 'Credit Card', 'Completed'),
+(24, '2024-06-24 09:00:00', 399.99, 'PayPal', 'Pending'),
+(25, '2024-06-25 10:00:00', 199.99, 'Debit Card', 'Completed'),
+(26, '2024-06-26 11:00:00', 499.99, 'Credit Card', 'Completed'),
+(27, '2024-06-27 12:00:00', 329.99, 'Credit Card', 'Completed'),
+(28, '2024-06-28 13:00:00', 599.99, 'PayPal', 'Pending'),
+(29, '2024-06-29 14:00:00', 269.99, 'Debit Card', 'Completed'),
+(30, '2024-06-30 15:00:00', 179.99, 'Credit Card', 'Completed');
+
+
+Select * from Payments
+
+
+-- Query the address, starttime and endtime of the servicepoints in the same city as userid 5 --
+
+SELECT sp.streetaddr, sp.starttime, sp.endtime
+FROM ServicePoint sp
+JOIN Address a ON sp.city = a.city
+WHERE a.userid = 5;
+
+
+-- Query the information of laptops --
+
+SELECT *
+FROM Product
+WHERE type = 'laptop';
+
+
+-- Query the total quantity of products from store with storeid 8 in the shopping cart --
+
+SELECT SUM(sc.quantity) AS totalQuantity
+FROM Save_to_Shopping_Cart sc
+JOIN Product p ON sc.pid = p.pid
+WHERE p.sid = 8;
+
+
+-- Query the total quantity of products from store with storeid 8 in the shopping cart --
+
+SELECT SUM(sc.quantity) AS totalQuantity
+FROM Save_to_Shopping_Cart sc
+JOIN Product p ON sc.pid = p.pid
+WHERE p.sid = 8;
+
+
+-- Query the name and address of orders delivered on 2017-02-17 --
+
+SELECT a.name, a.streetaddr, a.city
+FROM Address a
+JOIN Deliver_To dt ON a.addrid = dt.addrid
+WHERE dt.TimeDelivered = '2017-02-17';
+
+
+-- Query the comments of product 12345678 --
+
+SELECT *
+FROM Comments
+WHERE pid = 12345678;
+
+
+-- Insert the user id of sellers whose name starts with A into buyer --
+
+INSERT INTO Buyer
+SELECT *
+FROM Seller
+WHERE userid IN (SELECT userid FROM Users WHERE name LIKE 'A%');
+
+
+-- Update the payment state of orders to unpaid which created after year 2017 and with total amount greater than 50 --
+
+UPDATE Orders
+SET paymentState = 'Unpaid'
+WHERE creationTime > '2017-01-01' AND totalAmount > 50;
+
+
+-- Update the name and contact phone number of address where the province is Quebec and city is Montreal --
+
+UPDATE Address
+SET name = 'Awesome Lady', contactPhoneNumber = '1234567'
+WHERE province = 'Quebec' AND city = 'Montreal';
+
+
+-- Delete the store which opened before year 2017 --
+
+DELETE FROM Save_to_Shopping_Cart
+WHERE addTime < '2017-01-01';
+
+
+-- Create view of all products whose price above average price --
+
+CREATE VIEW Products_Above_Average_Price AS
+SELECT pid, name, price 
+FROM Product
+WHERE price > (SELECT AVG(price) FROM Product);
+
+-- Update the view --
+
+UPDATE Products_Above_Average_Price
+SET price = 1
+WHERE name = 'GoPro HERO5';
+
+
+-- Create view of all products sales in 2016 --
+
+CREATE VIEW Product_Sales_For_2016 AS
+SELECT p.pid, p.name, p.price
+FROM Product p
+WHERE p.pid IN (
+    SELECT oi.pid
+    FROM OrderItem oi
+    JOIN Contain c ON oi.itemid = c.itemid
+    JOIN Payment pay ON c.orderNumber = pay.orderNumber
+    WHERE pay.payTime >= '2016-01-01' AND pay.payTime <= '2016-12-31'
+);
+
+-- Update the view --
+
+UPDATE Product_Sales_For_2016
+SET price = 2
+WHERE name = 'GoPro HERO5';
+
+
+-- Check whether the products saved to the shopping cart after the year 2017 has quantities of smaller than 10 --
+
+ALTER TABLE Save_to_Shopping_Cart
+ADD CONSTRAINT Check_Quantity
+CHECK (quantity <= 10 OR addTime > '2017-01-01');
+
+-- Insert violating records --
+
+INSERT INTO Save_to_Shopping_Cart VALUES (18, 67890123, '2016-11-23', 9); -- Error: violates check constraint
+INSERT INTO Save_to_Shopping_Cart VALUES (24, 67890123, '2017-02-22', 8);
+INSERT INTO Save_to_Shopping_Cart VALUES (5, 56789012, '2016-10-17', 11); -- Error: violates check constraint
+
+
+-- Check whether the ordered item has 0 to 10 quantities --
+
+ALTER TABLE Contain
+ADD CONSTRAINT Check_Quantity
+CHECK (quantity > 0 AND quantity <= 10);
+
+-- Insert violating records --
+
+INSERT INTO Contain VALUES (76023921, 23543245, 11); -- Error: violates check constraint
+INSERT INTO Contain VALUES (23924831, 65738929, 8);
